@@ -1,0 +1,11 @@
+{
+  "name": "command-line-todo-list-with-sql",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "author": "Johnathon Lubaway",
+  "license": "ISC"
+}
