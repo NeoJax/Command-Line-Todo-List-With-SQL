@@ -1,0 +1,2 @@
+
+module.exports.del = del;

@@ -1,0 +1,5 @@
+CREATE TABLE tasks {
+  ID INT NOT NULL PRIMARY KEY,
+  taskDesc VARCHAR(255),
+  taskComp BOOLEAN,
+  }
