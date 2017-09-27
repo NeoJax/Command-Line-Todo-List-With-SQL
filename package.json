@@ -2,14 +2,13 @@
   "name": "command-line-todo-list-with-sql",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "tasks.js",
   "scripts": {
     "test": "test"
   },
   "author": "Johnathon Lubaway",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.15.5",
     "pg": "^7.3.0",
     "postgresql": "0.0.1"
   }
