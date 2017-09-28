@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 // Require things
 const pg = require('pg');
 const add = require('./commands/add.js');
@@ -13,8 +14,6 @@ const client = new pg.Client(connectionString);
 // Connect to DB
 client.connect();
 
-// If not initialized then make the table for tasks
-
 // Read DB
 function checkData() {
   return new Promise((resolve, reject) => {
@@ -28,10 +27,20 @@ function checkData() {
   });
 }
 
-// Write DB || List DB
-function writeData() {
+function dropData() {
   return new Promise((resolve, reject) => {
-    client.query('INSERT INTO tasks (task) VALUES($1)', [string], (err, res) => {
+    client.query('DROP TABLE tasks', (err, res) => {
+      if (err) {
+        reject(err);
+      }
+      resolve(res);
+    });
+  });
+}
+
+function createData() {
+  return new Promise((resolve, reject) => {
+    client.query('CREATE TABLE tasks(ID SERIAL, TASK VARCHAR(255), COMPLETED BOOLEAN, PRIMARY KEY(ID))', (err, res) => {
       client.end();
       if (err) {
         reject(err);
@@ -41,62 +50,27 @@ function writeData() {
   });
 }
 
-function completeData() {
-  return new Promise((resolve, reject) => {
-    client.query('UPDATE tasks SET completed = 1 WHERE id = $1', [string], (err, res) => {
-      client.end();
-      if (err) {
-        reject(err);
-      }
-      resolve(res);
-    });
-  });
-}
-
-function deleteData() {
-  return new Promise((resolve, reject) => {
-    client.query('DELETE FROM tasks WHERE id = $1', [string], (err, res) => {
-      client.end();
-      if (err) {
-        reject(err);
-      }
-      resolve(res);
-    });
-  });
-}
-
-function resetData() {
-  return new Promise((resolve, reject) => {
-    client.query('DROP TABLE tasks', [string], (err, res) => {
-      client.end();
-      if (err) {
-        reject(err);
-      }
-      resolve(res);
-    });
-    client.query('CREATE TABLE tasks(ID INT NOT NULL, TASK CHAR, COMPLETE BOOLEAN, PRIMARY KEY(ID))', [string], (err, res) => {
-      client.end();
-      if (err) {
-        reject(err);
-      }
-      resolve(res);
-    });
-  });
-}
+// If not initialized then make the table for tasks
+// try {
+//   checkData();
+// } catch (error) {
+//   console.log();
+// }
 
 // Check command
 if (command === 'add') {
-  writeData();
+  add.add(client, string);
 } else if (command === 'list') {
-  checkData().then((data) => {
+  list.list(client).then((data) => {
     console.log(data.rows);
   });
 } else if (command === 'complete') {
-  completeData();
+  complete.complete(client, string);
 } else if (command === 'delete') {
-  deleteData();
+  del.del(client, string);
 } else if (command === 'reset') {
-  resetData();
+  dropData();
+  createData();
 } else {
   console.log('Wrong command silly');
 }
